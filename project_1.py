@@ -15,7 +15,5 @@ def load_penguins(filename):
 
 #Anna Kerhouslas calculation 1
 
-
-#calculate gender distributuion
-#size vs island 
+#hello
 #split up the functions that me and my group are doing
