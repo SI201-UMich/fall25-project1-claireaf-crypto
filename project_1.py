@@ -13,6 +13,9 @@ def load_penguins(filename):
     #print (data)
     return data
 
+#Anna Kerhouslas calculation 1
+
+
 #calculate gender distributuion
 #size vs island 
 #split up the functions that me and my group are doing
