@@ -122,8 +122,7 @@ def analyze_size_vs_island(penguins):
     grouped_data = group_data_by_island(penguins)
     averages = compute_averages(grouped_data)
 
-    return averages         
-
+    return averages
 
 #call functions
 #please write four test cases
@@ -212,3 +211,46 @@ class TestPenguinFunctions(unittest.TestCase):
         self.assertEqual(result, {})
 
 
+
+#-------------------output/main-----------------------
+#output call for everyone
+def main():
+    #universal
+    penguin_data = load_penguins("penguins.csv")
+
+#Claire Fuller output
+
+    #define function calls
+    averages = analyze_size_vs_island(penguin_data)
+    gender_dist = calculate_gender_distribution(penguin_data)
+
+#size v island output
+
+    print("Average Body Mass & Flipper Length by Island:")
+    for island, values in averages.items():
+        avg_mass = values["avg_body_mass_g"]
+        avg_flipper = values["avg_flipper_length_mm"]
+        print(f"{island}:")
+        print(f"- Avg Body Mass (g): {avg_mass if avg_mass is not None else 'N/A'}")
+        print(f"- Avg Flipper Length (mm): {avg_flipper if avg_flipper is not None else 'N/A'}")
+
+#gender distribution output
+
+    print("\nGender Distribution by Island:")
+    for species, islands in gender_dist.items():
+        print(f"{species}:")
+        for island, genders in islands.items():
+            gender_str = ", ".join([f"{g}: {round(p, 2)}%" for g, p in genders.items()])
+            print(f"- {island}: {gender_str}")
+#stuff i had for debugging
+    #size_results = analyze_size_vs_island(penguins=penguin_data)
+    #print(size_results)
+    
+    #gender_distribution = calculate_gender_distribution(penguins=penguin_data)
+    #print(gender_distribution)
+
+    print("All Done!")
+
+if __name__ == "__main__":
+    main()
+    unittest.main(exit=False)
