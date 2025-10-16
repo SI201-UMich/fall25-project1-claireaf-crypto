@@ -1,6 +1,13 @@
+#Name: Claire Fuller
+#Email:claireaf@umich.edu
+#Used some ChatGPT to aid with code structure, logic design, and file writing.
+#Data set used: penguins.csv
+
 import csv
 import os
 import unittest
+
+
 
 #Reading CSV into a list of dicts
 def load_penguins(filename):
