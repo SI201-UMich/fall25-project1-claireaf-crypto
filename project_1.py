@@ -125,4 +125,90 @@ def analyze_size_vs_island(penguins):
     return averages         
 
 
-#split up the functions that me and my group are doing
+#call functions
+#please write four test cases
+#per function. Two must test general/usual cases and two test edge cases.
+#For the project 1 test cases, please use a sample of your chosen csv dataset (ensure to use data that has
+#  NA/null values)
+#  rather than re-reading/reusing your entire csv file.
+
+
+
+#-------------------------------------------UNIT TESTS--------------------
+class TestPenguinFunctions(unittest.TestCase):
+
+#Claire Fuller tests:
+    def setUp(self):
+        self.sample_penguins = [
+            {"species": "Adelie", "island": "Torgersen", "sex": "male", "body_mass_g": 3700, "flipper_length_mm": 180},
+            {"species": "Adelie", "island": "Torgersen", "sex": "female", "body_mass_g": 3400, "flipper_length_mm": 176},
+            {"species": "Chinstrap", "island": "Dream", "sex": "male", "body_mass_g": 3800, "flipper_length_mm": 195},
+            {"species": "Gentoo", "island": "Biscoe", "sex": "NA", "body_mass_g": None, "flipper_length_mm": None},
+            {"species": "Adelie", "island": "Torgersen", "sex": None, "body_mass_g": 3600, "flipper_length_mm": 178},
+        ]
+    # -----------------gender distribution-----------------
+    def test_gender_distribution_normal_mixed(self):
+        result = calculate_gender_distribution(self.sample_penguins)
+        adelie_torg = result["Adelie"]["Torgersen"]
+        total_percent = sum(adelie_torg.values())
+        self.assertAlmostEqual(total_percent, 100.0, delta=0.01) # asked chat gpt about assert almost equal and helped me do delta
+        self.assertIn("male", adelie_torg)
+        self.assertIn("female", adelie_torg)
+        self.assertIn("NA", adelie_torg)
+
+    def test_gender_distribution_single_species(self):
+        penguins_single = [
+            {"species": "Adelie", "island": "Torgersen", "sex": "female"},
+            {"species": "Adelie", "island": "Torgersen", "sex": "male"}
+        ]
+        result = calculate_gender_distribution(penguins_single)
+        adelie = result["Adelie"]["Torgersen"]
+        self.assertAlmostEqual(adelie["male"], 50.0, delta=0.01) # same thing with delta
+        self.assertAlmostEqual(adelie["female"], 50.0, delta=0.01)
+
+    def test_gender_distribution_all_na(self):
+        penguins_all_na = [
+            {"species": "Adelie", "island": "Dream", "sex": None},
+            {"species": "Adelie", "island": "Dream", "sex": "NA"}
+        ]
+        result = calculate_gender_distribution(penguins_all_na)
+        adelie_dream = result["Adelie"]["Dream"]
+        self.assertAlmostEqual(adelie_dream["NA"], 100.0, delta=0.01) # same thing with delta
+        self.assertEqual(adelie_dream["male"], 0)
+        self.assertEqual(adelie_dream["female"], 0)
+
+    def test_gender_distribution_empty(self):
+        result = calculate_gender_distribution([])
+        self.assertEqual(result, {})
+
+    # -----------------size vs island-----------------
+    def test_size_vs_island_normal(self):
+        result = analyze_size_vs_island(self.sample_penguins)
+        self.assertIn("Torgersen", result)
+        self.assertIn("Dream", result)
+        self.assertIn("Biscoe", result)
+        self.assertIsInstance(result["Torgersen"]["avg_body_mass_g"], float)
+        self.assertIsInstance(result["Torgersen"]["avg_flipper_length_mm"], float)
+
+    def test_size_vs_island_two_islands(self):
+        penguins_islands = [
+            {"island": "Dream", "body_mass_g": 4000, "flipper_length_mm": 200},
+            {"island": "Biscoe", "body_mass_g": 5000, "flipper_length_mm": 210}
+        ]
+        result = analyze_size_vs_island(penguins_islands)
+        self.assertEqual(result["Dream"]["avg_body_mass_g"], 4000)
+        self.assertEqual(result["Biscoe"]["avg_flipper_length_mm"], 210)
+
+    def test_size_vs_island_missing_values(self):
+        penguins_missing = [
+            {"island": "Dream", "body_mass_g": None, "flipper_length_mm": None}
+        ]
+        result = analyze_size_vs_island(penguins_missing)
+        self.assertIsNone(result["Dream"]["avg_body_mass_g"])
+        self.assertIsNone(result["Dream"]["avg_flipper_length_mm"])
+
+    def test_size_vs_island_empty(self):
+        result = analyze_size_vs_island([])
+        self.assertEqual(result, {})
+
+
