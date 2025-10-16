@@ -213,19 +213,45 @@ class TestPenguinFunctions(unittest.TestCase):
 
 
 #-------------------output/main-----------------------
-#output call for everyone
+
+def write_claire_results_to_file(averages, gender_dist):
+    # show where the file will be saved
+    print("Saving results to:", os.path.abspath("claire_results.txt"))
+
+    with open("claire_results.txt", "w", encoding="utf-8") as f:
+        f.write("CLAIRE FULLER'S PENGUIN ANALYSIS RESULTS\n")
+        f.write("----------------------------------------\n\n")
+
+        # --- Size vs Island ---
+        f.write("Average Body Mass & Flipper Length by Island:\n")
+        for island, values in averages.items():
+            avg_mass = values["avg_body_mass_g"]
+            avg_flipper = values["avg_flipper_length_mm"]
+            f.write(f"{island}:\n")
+            f.write(f"  - Avg Body Mass (g): {avg_mass if avg_mass is not None else 'N/A'}\n")
+            f.write(f"  - Avg Flipper Length (mm): {avg_flipper if avg_flipper is not None else 'N/A'}\n")
+        f.write("\n")
+
+        # --- Gender Distribution ---
+        f.write("Gender Distribution by Island:\n")
+        for species, islands in gender_dist.items():
+            f.write(f"{species}:\n")
+            for island, genders in islands.items():
+                gender_str = ", ".join([f"{g}: {round(p, 2)}%" for g, p in genders.items()])
+                f.write(f"  - {island}: {gender_str}\n")
+
+    print("Claire's results written to claire_results.txt\n")
+
+
 def main():
-    #universal
+    # --- Load data ---
     penguin_data = load_penguins("penguins.csv")
 
-#Claire Fuller output
-
-    #define function calls
+    # --- Calculate results ---
     averages = analyze_size_vs_island(penguin_data)
     gender_dist = calculate_gender_distribution(penguin_data)
 
-#size v island output
-
+    # --- Print to console ---
     print("Average Body Mass & Flipper Length by Island:")
     for island, values in averages.items():
         avg_mass = values["avg_body_mass_g"]
@@ -234,23 +260,16 @@ def main():
         print(f"- Avg Body Mass (g): {avg_mass if avg_mass is not None else 'N/A'}")
         print(f"- Avg Flipper Length (mm): {avg_flipper if avg_flipper is not None else 'N/A'}")
 
-#gender distribution output
-
     print("\nGender Distribution by Island:")
     for species, islands in gender_dist.items():
         print(f"{species}:")
         for island, genders in islands.items():
             gender_str = ", ".join([f"{g}: {round(p, 2)}%" for g, p in genders.items()])
             print(f"- {island}: {gender_str}")
-#stuff i had for debugging
-    #size_results = analyze_size_vs_island(penguins=penguin_data)
-    #print(size_results)
-    
-    #gender_distribution = calculate_gender_distribution(penguins=penguin_data)
-    #print(gender_distribution)
 
-    print("All Done!")
+    # --- Write to file ---
+    write_claire_results_to_file(averages, gender_dist)
+
 
 if __name__ == "__main__":
     main()
-    unittest.main(exit=False)
